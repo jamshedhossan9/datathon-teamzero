@@ -1,0 +1,66 @@
+# Real domains of Malaysian banks, e-wallets, payment networks and often-impersonated organisations.
+# Used to spot lookalike domains (e.g. "rnaybank2u" vs "maybank2u"). One domain per line; "#" starts a comment.
+# Checked on 2026-10-17: each name resolves and its site responds (some answer 403 because of bot protection).
+
+# Banks
+maybank2u.com.my
+maybank.com
+cimb.com.my
+cimbclicks.com.my
+pbebank.com
+hlb.com.my
+rhbgroup.com
+ambank.com.my
+bankislam.com
+mybsn.com.my
+bankrakyat.com.my
+affinalways.com
+alliancebank.com.my
+ocbc.com.my
+uob.com.my
+hsbc.com.my
+agrobank.com.my
+muamalat.com.my
+mbsb.com
+gxbank.my
+
+# E-wallets and payment networks
+touchngo.com.my
+tngdigital.com.my
+grab.com
+myboost.co
+shopee.com.my
+bigpayme.com
+paynet.my
+duitnow.my
+
+# Payment gateways
+billplz.com
+toyyibpay.com
+senangpay.my
+senangpay.com
+
+# Government and regulators
+bnm.gov.my
+hasil.gov.my
+rmp.gov.my
+kwsp.gov.my
+perkeso.gov.my
+jpj.gov.my
+myeg.com.my
+
+# Couriers
+pos.com.my
+jtexpress.my
+ninjavan.co
+gdexpress.com
+dhl.com
+
+# Utilities and telcos
+tnb.com.my
+mytnb.com.my
+unifi.com.my
+maxis.com.my
+celcomdigi.com
+u.com.my
+airselangor.com

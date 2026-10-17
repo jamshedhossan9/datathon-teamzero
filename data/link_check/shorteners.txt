@@ -1,0 +1,20 @@
+# Link-shortening services. A shortened link hides where it really goes, so it is a warning sign in a
+# message that asks you to pay or log in. One domain per line; "#" starts a comment.
+bit.ly
+tinyurl.com
+t.co
+goo.gl
+ow.ly
+is.gd
+v.gd
+cutt.ly
+rb.gy
+shorturl.at
+t.ly
+s.id
+buff.ly
+tiny.cc
+rebrand.ly
+bl.ink
+short.gy
+qrco.de

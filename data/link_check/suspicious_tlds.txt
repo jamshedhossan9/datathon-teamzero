@@ -1,0 +1,26 @@
+# Domain endings that are cheap to register and often abused in scam and phishing links.
+# A warning sign only, not proof: legitimate sites use some of these too. One ending per line; "#" starts a comment.
+xyz
+top
+click
+icu
+cyou
+buzz
+monster
+rest
+sbs
+cfd
+bond
+online
+site
+live
+vip
+work
+loan
+win
+bid
+tk
+ml
+ga
+cf
+gq

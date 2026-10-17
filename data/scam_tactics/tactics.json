@@ -1,0 +1,283 @@
+{
+  "version": 1,
+  "notes": "Phrases are lowercase. Match case-insensitively as whole words or whole phrases (so 'pin' does not match inside 'shopping'). 'en' = English, 'ms' = Malay. Extend the lists freely.",
+  "tactics": [
+    {
+      "id": "urgency",
+      "label": "Urgency",
+      "description": "Pushes you to act before you have time to think or check.",
+      "phrases": {
+        "en": [
+          "urgent",
+          "immediately",
+          "within 24 hours",
+          "within 1 hour",
+          "today only",
+          "act now",
+          "last chance",
+          "final notice",
+          "final reminder",
+          "expires today",
+          "as soon as possible",
+          "before midnight",
+          "limited time",
+          "limited slots"
+        ],
+        "ms": [
+          "segera",
+          "dengan segera",
+          "dalam masa 24 jam",
+          "dalam masa 1 jam",
+          "hari ini sahaja",
+          "peluang terakhir",
+          "notis akhir",
+          "peringatan terakhir",
+          "tamat tempoh",
+          "secepat mungkin",
+          "sebelum tengah malam",
+          "masa terhad",
+          "tempat terhad"
+        ]
+      }
+    },
+    {
+      "id": "impersonation",
+      "label": "Impersonation",
+      "description": "Claims to be a bank, police, court, government office, courier or official team.",
+      "phrases": {
+        "en": [
+          "police",
+          "inspector",
+          "court",
+          "customs",
+          "inland revenue",
+          "tax department",
+          "central bank",
+          "bank officer",
+          "security team",
+          "fraud department",
+          "customer service",
+          "official notice",
+          "courier",
+          "this is your bank"
+        ],
+        "ms": [
+          "polis",
+          "inspektor",
+          "mahkamah",
+          "kastam",
+          "lembaga hasil",
+          "jabatan cukai",
+          "bank pusat",
+          "pegawai bank",
+          "pasukan keselamatan",
+          "jabatan penipuan",
+          "khidmat pelanggan",
+          "notis rasmi",
+          "kurier",
+          "pihak bank"
+        ]
+      }
+    },
+    {
+      "id": "prize",
+      "label": "Prize or reward",
+      "description": "Promises a prize, gift or reward you did not ask for.",
+      "phrases": {
+        "en": [
+          "congratulations",
+          "you have won",
+          "you won",
+          "winner",
+          "prize",
+          "reward",
+          "free gift",
+          "lucky draw",
+          "cash prize",
+          "claim your",
+          "selected to receive"
+        ],
+        "ms": [
+          "tahniah",
+          "anda telah menang",
+          "anda menang",
+          "pemenang",
+          "hadiah",
+          "ganjaran",
+          "hadiah percuma",
+          "cabutan bertuah",
+          "hadiah wang tunai",
+          "tuntut",
+          "dipilih untuk menerima"
+        ]
+      }
+    },
+    {
+      "id": "threat",
+      "label": "Threat or fear",
+      "description": "Threatens a blocked account, arrest, legal action or a penalty.",
+      "phrases": {
+        "en": [
+          "suspended",
+          "blocked",
+          "frozen",
+          "will be closed",
+          "legal action",
+          "arrest",
+          "arrest warrant",
+          "warrant",
+          "penalty",
+          "money laundering",
+          "unauthorised transaction",
+          "unauthorized transaction",
+          "unusual activity"
+        ],
+        "ms": [
+          "disekat",
+          "digantung",
+          "dibekukan",
+          "akan ditutup",
+          "tindakan undang-undang",
+          "ditangkap",
+          "waran tangkap",
+          "waran",
+          "penalti",
+          "denda",
+          "pengubahan wang haram",
+          "transaksi tidak sah",
+          "aktiviti luar biasa"
+        ]
+      }
+    },
+    {
+      "id": "credentials",
+      "label": "Asks for OTP, PIN or password",
+      "description": "Asks you to share a one-time code, PIN, password or card details.",
+      "phrases": {
+        "en": [
+          "otp",
+          "tac",
+          "pin",
+          "password",
+          "verification code",
+          "one-time code",
+          "login details",
+          "card number",
+          "cvv",
+          "share the code",
+          "send the code",
+          "ic number"
+        ],
+        "ms": [
+          "kod pengesahan",
+          "kod sekali guna",
+          "kata laluan",
+          "butiran log masuk",
+          "nombor kad",
+          "kongsi kod",
+          "hantar kod",
+          "nombor ic",
+          "nombor kad pengenalan"
+        ]
+      }
+    },
+    {
+      "id": "payment_request",
+      "label": "Payment request",
+      "description": "Asks you to pay, transfer or top up money.",
+      "phrases": {
+        "en": [
+          "pay",
+          "pay now",
+          "payment",
+          "transfer",
+          "outstanding",
+          "fee",
+          "charge",
+          "deposit",
+          "top up",
+          "bill",
+          "invoice",
+          "renew",
+          "subscription"
+        ],
+        "ms": [
+          "bayar",
+          "bayaran",
+          "pindahkan",
+          "pindahan",
+          "tunggakan",
+          "yuran",
+          "caj",
+          "deposit",
+          "tambah nilai",
+          "bil",
+          "invois",
+          "perbaharui",
+          "langganan"
+        ]
+      }
+    },
+    {
+      "id": "easy_money",
+      "label": "Easy money",
+      "description": "Promises easy income or guaranteed returns (job and investment scams).",
+      "phrases": {
+        "en": [
+          "part-time job",
+          "work from home",
+          "earn rm",
+          "no experience needed",
+          "guaranteed return",
+          "guaranteed profit",
+          "high return",
+          "monthly return",
+          "investment",
+          "double your money"
+        ],
+        "ms": [
+          "kerja sambilan",
+          "kerja dari rumah",
+          "pendapatan lumayan",
+          "tanpa pengalaman",
+          "pulangan dijamin",
+          "keuntungan dijamin",
+          "pulangan tinggi",
+          "pulangan bulanan",
+          "pelaburan",
+          "gandakan wang"
+        ]
+      }
+    },
+    {
+      "id": "contact_push",
+      "label": "Pushes you to a link or number",
+      "description": "Tells you to click a link, call or WhatsApp a number.",
+      "phrases": {
+        "en": [
+          "click the link",
+          "click here",
+          "tap the link",
+          "tap here",
+          "call this number",
+          "call us",
+          "whatsapp us",
+          "whatsapp me",
+          "contact us at",
+          "reply with"
+        ],
+        "ms": [
+          "klik pautan",
+          "klik di sini",
+          "tekan pautan",
+          "tekan di sini",
+          "hubungi nombor",
+          "hubungi kami",
+          "whatsapp kami",
+          "whatsapp saya",
+          "balas dengan"
+        ]
+      }
+    }
+  ]
+}

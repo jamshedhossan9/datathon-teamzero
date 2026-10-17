@@ -1,0 +1,21 @@
+id,language,message,expected_verdict,expected_flags,note
+1,en,"Hi mum, I'll be home by 7. Can you keep some rice for me?",safe,,normal family chat
+2,ms,"Jom makan tengah hari esok? Aku belanja.",safe,,normal chat in Malay
+3,en,"Meeting moved to 3pm in room B. See you there.",safe,,normal work message
+4,en,"Bro, later we go mamak lah, 8pm ok?",safe,,Manglish chat
+5,ms,"Assalamualaikum, kelas esok dibatalkan. Jumpa minggu depan.",safe,,normal notice in Malay
+6,en,"Your TAC for login is 482913. Do not share this code with anyone.",safe,credentials,genuine OTP notice: mentions TAC and 'share' but must NOT be judged a scam (false-positive test)
+7,en,"Your parcel has been delivered. Track it at https://www.pos.com.my",safe,,genuine-looking notice with a real domain (legit-link test)
+8,en,"Congratulations! You have won a FREE holiday. Text WIN to 81234 to claim your prize now!",scam,prize,old-style spam like the training data
+9,ms,"Tahniah! Anda pemenang cabutan bertuah RM5,000. Tuntut hadiah anda di http://203.0.113.45/claim",scam,prize;ip_url,prize scam in Malay; link uses a raw IP address (203.0.113.x is a documentation-only range)
+10,en,"Your bank account has been suspended due to unusual activity. Verify within 24 hours at http://rnaybank2u-secure.xyz/login or it will be closed.",scam,threat;urgency;lookalike;suspicious_tld,fake bank alert; lookalike of maybank2u (rn instead of m); TEST ONLY - not for the demo video
+11,ms,"Bungkusan anda ditahan kerana alamat tidak lengkap. Bayar caj RM2.50 dalam masa 24 jam di https://bit.ly/3xYzAbc",scam,payment_request;urgency;shortener;payment_link,parcel-fee scam in Malay
+12,en,"This is the security team. We detected a login from a new device. Please share the 6-digit TAC we just sent you to cancel it.",scam,impersonation;credentials,OTP theft
+13,ms,"Pegawai bank di sini. Akaun anda akan disekat. Sila kongsi kod pengesahan yang dihantar ke telefon anda segera.",scam,impersonation;threat;credentials;urgency,OTP theft in Malay
+14,en,"This is Inspector Lee from the police. There is an arrest warrant in your name for money laundering. Call 03-1234 5678 immediately.",scam,impersonation;threat;urgency,fake police call (Macau scam style)
+15,en,"Part-time job! Earn RM300 per day just liking videos. No experience needed. WhatsApp us at 011-2345 6789 now.",scam,easy_money;contact_push,job scam (phone number is a contact, not a payment destination)
+16,en,"Guaranteed 30% monthly return! Invest RM1,000 today, limited slots. Transfer to 9876-5432-1098 and send the receipt.",scam,easy_money;urgency;payment_request;bank_account,investment scam
+17,en,"Dear customer, your electricity bill for September is RM84.20. Please pay by 25 Oct to account 1234-5678-9012 (Bank Contoh). Thank you.",suspicious,payment_request;bank_account,copied real-looking bill with a swapped account: no scam words; the payment-details warning must catch it
+18,ms,"Yuran tuisyen bulan ini RM150. Sila bayar melalui e-wallet ke 012-345 6789 (Cikgu Aina). Terima kasih.",suspicious,payment_request;ewallet_phone,may be genuine: the point is 'confirm who you are paying'
+19,en,"Your streaming subscription renews today. Update your payment here: https://pay.example-checkout.xyz/inv/8841",suspicious,payment_request;suspicious_tld;payment_link,subscription-fee style message with a payment link
+20,en,"Hi, here is the invoice for your order #4521, RM45.00. Pay here: http://localhost:38889/pay/kedai-contoh",suspicious,payment_request;payment_link,points to our own made-up payment page (step 405) for the receiver-name demo; on the VM replace localhost with the VM IP
