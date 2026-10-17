@@ -1,4 +1,4 @@
-"""Team Zero scam checker: Flask API and pages, running on IBM LinuxONE.
+"""ZeroScam (Team Zero): Flask API and pages, running on IBM LinuxONE.
 
 Run from the repo folder:  python app.py   (listens on port 38889)
 """
