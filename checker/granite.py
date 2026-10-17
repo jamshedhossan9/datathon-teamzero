@@ -130,16 +130,28 @@ def clean(text, verdict):
     # Only statements about the message itself count ("this message looks safe"), not advice such as
     # "check that the bill is genuine"
     subject = r"\b(?:this|it|the message|this message)"
-    calls_it_fine = re.search(subject + r" (?:is|looks|seems|appears)(?: to be)? (?:safe|normal|genuine|legitimate)\b", lowered)
-    calls_it_scam = re.search(subject + r" (?:is|looks like|seems like) (?:a |definitely a )?scam\b", lowered)
+    # Up to two extra words, but never "not": "is a common scam", "looks like a perfectly normal message"
+    extra = r"(?:(?!not\b)[a-z]+ ){0,2}"
+    calls_it_fine = re.search(subject + r" (?:is|looks|seems|appears)(?: to be| like)? (?:a |an )?" + extra
+                              + r"(?:safe|normal|genuine|legitimate)\b", lowered)
+    calls_it_scam = re.search(subject + r" (?:is|looks like|seems like|appears to be) (?:a |an )?" + extra + r"scams?\b", lowered)
     if verdict != "safe" and calls_it_fine:
         return None
-    if verdict == "safe" and calls_it_scam:
-        return None
+    if verdict == "safe":
+        # A safe message needs no scam talk at all, and must not be described as asking for something
+        # ("It asks for money" is rejected, "It does not ask for money" is kept)
+        if calls_it_scam or re.search(r"\b(?:scams?|scammers?|fraud|phishing)\b", lowered):
+            return None
+        if re.search(r"(?<!not )(?<!n't )(?<!never )\basks? (?:you )?(?:for|to)\b", lowered):
+            return None
     if verdict == "suspicious":
         # "Suspicious" means "check first", not a confirmed scam: soften instead of rejecting
-        answer = re.sub(r"\b(this|it|the message|this message) is (?:a |definitely a )?scam\b",
-                        lambda m: m.group(1) + " may be a scam", answer, flags=re.IGNORECASE)
+        def soften(m):
+            rest = m.group(2).replace("definitely ", "") or "a "
+            return f"{m.group(1)} may be {rest}scam"
+
+        answer = re.sub(r"\b(this|it|the message|this message) is ((?:a |an )?" + extra + r")scam\b",
+                        soften, answer, flags=re.IGNORECASE)
     return answer
 
 
