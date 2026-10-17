@@ -1,33 +1,38 @@
 """Granite explanation (step 407): IBM Granite, running on LinuxONE, explains the verdict in plain words.
 
 The rule layers decide the verdict; Granite only explains it. The model in IBM's image is a small *base*
-(text-continuation) model, so the prompt shows two worked examples for it to follow, and every answer is
+(text-continuation) model, so the prompt shows three worked examples for it to follow, and every answer is
 checked. If Granite is missing, slow to load, or writes something unusable, the rules-based explanation is used.
 """
 import os
 import re
 import sys
 import threading
+import time
 from pathlib import Path
 
 from .privacy import mask
 
+# Start the API with GRANITE_DEBUG=1 to print rejected answers and timings (testing only: they may contain
+# details from the message, and messages are otherwise never logged)
+DEBUG = os.environ.get("GRANITE_DEBUG") == "1"
+
 # In IBM's Jupyter image the model file sits in the home folder (/home/ibm-user)
 MODEL_PATH = Path(os.environ.get("GRANITE_MODEL_PATH", Path.home() / "granite-4.0-h-350m-base-be.f16.gguf"))
 
-PROMPT = """Below, a scam checker explains its verdict to an elderly person in two short, simple sentences.
+PROMPT = """A scam checker explains its verdict in two short, simple sentences.
 
-Message: Congratulations! You won RM5,000. Click bit.ly/x9 to claim your prize.
+Message: You won RM5,000! Click bit.ly/x9 to claim.
 Verdict: scam
-Findings: prize you did not ask for; shortened link
-Explanation: This message promises a prize you never entered for, which is a common scam trick. The short link hides where it really goes, so do not click it.
+Findings: prize; shortened link
+Explanation: It promises a prize you never entered for, a common scam trick. Do not click the hidden link.
 
-Message: Dear customer, your bill for October is RM120.50. Please pay to account ****-****-4321 by Friday.
+Message: Your bill is RM120.50. Pay to account ****-4321 by Friday.
 Verdict: suspicious
 Findings: payment request; bank account to pay into
-Explanation: This message asks you to pay into a bank account that we cannot verify. Check with the company using a phone number you already trust before you pay.
+Explanation: It asks you to pay into an account we cannot verify. Check with the company on a number you trust first.
 
-Message: Hi mum, I'll be home by 7. Can you keep some rice for me?
+Message: Hi mum, I'll be home by 7.
 Verdict: safe
 Findings: none
 Explanation: This looks like a normal personal message. It does not ask for money, codes or clicks.
@@ -125,13 +130,20 @@ def clean(text, verdict):
     if not answer.endswith((".", "!", "?")):
         answer += "."
     lowered = answer.lower()
-    # Reject answers that contradict the verdict the rules decided
-    if verdict != "safe" and re.search(r"\b(safe|normal|genuine)\b", lowered) and "not safe" not in lowered:
+    # Reject only clear contradictions of the verdict the rules decided
+    # Only statements about the message itself count ("this message looks safe"), not advice such as
+    # "check that the bill is genuine"
+    subject = r"\b(?:this|it|the message|this message)"
+    calls_it_fine = re.search(subject + r" (?:is|looks|seems|appears)(?: to be)? (?:safe|normal|genuine|legitimate)\b", lowered)
+    calls_it_scam = re.search(subject + r" (?:is|looks like|seems like) (?:a |definitely a )?scam\b", lowered)
+    if verdict != "safe" and calls_it_fine:
         return None
-    if verdict == "safe" and re.search(r"\bscam\b", lowered) and not re.search(r"\bnot (a )?scam\b", lowered):
+    if verdict == "safe" and calls_it_scam:
         return None
-    if verdict == "suspicious" and re.search(r"\b(is|this is) (a|definitely a) scam\b", lowered):
-        return None  # "suspicious" means "check first", not a confirmed scam
+    if verdict == "suspicious":
+        # "Suspicious" means "check first", not a confirmed scam: soften instead of rejecting
+        answer = re.sub(r"\b(this|it|the message|this message) is (?:a |definitely a )?scam\b",
+                        lambda m: m.group(1) + " may be a scam", answer, flags=re.IGNORECASE)
     return answer
 
 
@@ -145,18 +157,22 @@ def explain(message, result, model=None):
         return None
     prompt = build_prompt(message, result)
     for attempt, temperature in enumerate((0.2, 0.6), start=1):
+        started = time.time()
         with _generate_lock:
             out = model(
                 prompt,
-                max_tokens=70,
+                max_tokens=50,
                 temperature=temperature,
                 top_p=0.9,
                 repeat_penalty=1.3,
                 stop=["\n", "Message:", "Verdict:"],
             )
-        text = clean(out["choices"][0]["text"], result["verdict"])
+        raw = out["choices"][0]["text"]
+        text = clean(raw, result["verdict"])
+        if DEBUG:
+            print(f"granite debug: attempt {attempt}, {time.time() - started:.1f} s, raw answer: {raw!r}", file=sys.stderr, flush=True)
         if text:
             return {"text": text, "source": "granite"}
-        # Only a note, never the message or the answer: messages are not logged
+        # Only a note, never the message or the answer (unless GRANITE_DEBUG=1): messages are not logged
         print(f"granite: answer rejected by the quality check (attempt {attempt})", file=sys.stderr, flush=True)
     return None
