@@ -68,13 +68,13 @@ function renderResult(container, result, extraClass = "", explainMessage = null)
     })
       .then((r) => r.json())
       .then((data) => {
-        if (data.source === "granite") {
-          text.textContent = data.text;
-        } else {
-          box.remove(); // Granite not available here: the rules-based "Why" above is already shown
-        }
+        text.textContent = data.text; // Granite's answer, or a short note if it could not give one
+        if (data.source !== "granite") box.classList.add("muted");
       })
-      .catch(() => box.remove());
+      .catch(() => {
+        text.textContent = "Sorry, the AI explanation couldn't be loaded. The checks above still apply.";
+        box.classList.add("muted");
+      });
   }
 
   if (result.reasons.length) {

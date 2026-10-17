@@ -97,7 +97,12 @@ def explain():
     answer = granite.explain(message, result)
     if answer:
         return jsonify(answer)
-    return jsonify({"text": result["explanation"]["summary"], "source": "rules", "granite": granite.status()})
+    if granite.status() == "unavailable":
+        return jsonify({"text": "The AI explanation isn't available on this server right now.", "source": "unavailable"})
+    return jsonify({
+        "text": "Sorry, the AI model couldn't write a clear explanation for this message. The checks above still apply.",
+        "source": "fallback",
+    })
 
 
 @app.get("/pay/<name>")
@@ -110,6 +115,10 @@ def demo_payment_page(name):
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", "38889"))
-    granite.load_in_background()  # load Granite once at start-up, so the first explanation is not slow
+    # Load Granite BEFORE starting the server: while llama.cpp loads it silences the terminal, and a server
+    # started during that moment would never show its request log lines
+    print("Loading Granite...", flush=True)
+    granite.load()
+    print(f"Granite: {granite.status()}", flush=True)
     # threaded=True so the checker can fetch our own demo payment pages while answering a request
     app.run(host="0.0.0.0", port=port, threaded=True)

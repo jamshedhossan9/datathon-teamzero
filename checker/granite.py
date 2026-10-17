@@ -6,6 +6,7 @@ checked. If Granite is missing, slow to load, or writes something unusable, the 
 """
 import os
 import re
+import sys
 import threading
 from pathlib import Path
 
@@ -20,6 +21,11 @@ Message: Congratulations! You won RM5,000. Click bit.ly/x9 to claim your prize.
 Verdict: scam
 Findings: prize you did not ask for; shortened link
 Explanation: This message promises a prize you never entered for, which is a common scam trick. The short link hides where it really goes, so do not click it.
+
+Message: Dear customer, your bill for October is RM120.50. Please pay to account ****-****-4321 by Friday.
+Verdict: suspicious
+Findings: payment request; bank account to pay into
+Explanation: This message asks you to pay into a bank account that we cannot verify. Check with the company using a phone number you already trust before you pay.
 
 Message: Hi mum, I'll be home by 7. Can you keep some rice for me?
 Verdict: safe
@@ -130,18 +136,27 @@ def clean(text, verdict):
 
 
 def explain(message, result, model=None):
-    """Return {"text", "source": "granite"} or None if Granite is not available or its answer is unusable."""
+    """Return {"text", "source": "granite"} or None if Granite is not available or its answers are unusable.
+
+    Tries twice: a careful first attempt, then a slightly more varied one if the first answer is rejected.
+    """
     model = model or (load() if _state != "unavailable" else None)
     if model is None:
         return None
-    with _generate_lock:
-        out = model(
-            build_prompt(message, result),
-            max_tokens=70,
-            temperature=0.2,
-            top_p=0.9,
-            repeat_penalty=1.3,
-            stop=["\n", "Message:", "Verdict:"],
-        )
-    text = clean(out["choices"][0]["text"], result["verdict"])
-    return {"text": text, "source": "granite"} if text else None
+    prompt = build_prompt(message, result)
+    for attempt, temperature in enumerate((0.2, 0.6), start=1):
+        with _generate_lock:
+            out = model(
+                prompt,
+                max_tokens=70,
+                temperature=temperature,
+                top_p=0.9,
+                repeat_penalty=1.3,
+                stop=["\n", "Message:", "Verdict:"],
+            )
+        text = clean(out["choices"][0]["text"], result["verdict"])
+        if text:
+            return {"text": text, "source": "granite"}
+        # Only a note, never the message or the answer: messages are not logged
+        print(f"granite: answer rejected by the quality check (attempt {attempt})", file=sys.stderr, flush=True)
+    return None
