@@ -24,6 +24,9 @@ WEAK_TACTICS = {"urgency", "payment_request", "contact_push"}
 # Genuine one-time-code notices warn you NOT to share the code
 OTP_NOTICE = re.compile(r"do not share|don't share|never share|jangan kongsi|jangan berikan", re.IGNORECASE)
 
+# A money amount such as "RM500" or "RM 1,000": a strong tactic plus a sum of money points to a scam
+MONEY_AMOUNT = re.compile(r"\bRM\s?\d", re.IGNORECASE)
+
 
 def _decide(model, tactic_ids, payment_flags, link_flags, links, receivers, message):
     """Combine the layers into one verdict. Returns (verdict, reassured)."""
@@ -40,7 +43,7 @@ def _decide(model, tactic_ids, payment_flags, link_flags, links, receivers, mess
         return "scam", False
     if len(strong) >= 2:
         return "scam", False
-    if strong and (weak or payment_flags or link_flags):
+    if strong and (weak or payment_flags or link_flags or MONEY_AMOUNT.search(message)):
         return "scam", False
     if "urgency" in weak and payment_flags and {"shortener", "suspicious_tld"} & link_flags:
         return "scam", False  # pay urgently through a hidden or risky link

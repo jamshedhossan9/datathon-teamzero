@@ -25,11 +25,14 @@ def load_tactics(path=TACTICS_PATH):
         _tactics = []
         for tactic in data["tactics"]:
             phrases = tactic["phrases"]["en"] + tactic["phrases"]["ms"]
+            patterns = [(p, _phrase_pattern(p)) for p in phrases]
+            # Regular expressions for phrases with a changing part, e.g. "within 12 hours"
+            patterns += [(None, re.compile(r"(?<![a-z])(?:" + p + r")(?![a-z])")) for p in tactic.get("patterns", [])]
             _tactics.append({
                 "id": tactic["id"],
                 "label": tactic["label"],
                 "description": tactic["description"],
-                "patterns": [(p, _phrase_pattern(p)) for p in phrases],
+                "patterns": patterns,
             })
     return _tactics
 
@@ -39,7 +42,11 @@ def find_tactics(message):
     text = message.lower()
     found = []
     for tactic in load_tactics():
-        matches = [phrase for phrase, pattern in tactic["patterns"] if pattern.search(text)]
+        matches = []
+        for phrase, pattern in tactic["patterns"]:
+            hit = pattern.search(text)
+            if hit:
+                matches.append(phrase or hit.group())  # for a regex, show the text it matched
         if matches:
             found.append({
                 "id": tactic["id"],

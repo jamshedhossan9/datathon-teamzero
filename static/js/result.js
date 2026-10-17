@@ -42,6 +42,15 @@ function renderResult(container, result, extraClass = "") {
   container.appendChild(risk);
   container.appendChild(el("div", "hint", `Risk score: ${Math.round(result.risk_score * 100)} / 100`));
 
+  // Who receives the money, read from the payment link's page (step 406)
+  const receivers = result.layers.receivers;
+  if (receivers && receivers.results.length) {
+    const r = receivers.results[0];
+    let text = r.receiver ? `💳 Payment goes to: ${r.receiver}` : "💳 Payment goes to: couldn't verify";
+    if (r.mismatch) text += ` (but the message claims to be from ${receivers.claimed_sender})`;
+    container.appendChild(el("p", `payee ${r.mismatch || !r.receiver ? "warn" : ""}`.trim(), text));
+  }
+
   container.appendChild(el("h3", null, "Why"));
   container.appendChild(el("p", null, result.explanation.summary));
 

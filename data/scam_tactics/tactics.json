@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "notes": "Phrases are lowercase. Match case-insensitively as whole words or whole phrases (so 'pin' does not match inside 'shopping'). 'en' = English, 'ms' = Malay. Extend the lists freely.",
+  "notes": "Phrases are lowercase. Match case-insensitively as whole words or whole phrases (so 'pin' does not match inside 'shopping'). 'en' = English, 'ms' = Malay. Optional 'patterns' are regular expressions for phrases with a changing part, e.g. any number of hours. Extend the lists freely.",
   "tactics": [
     {
       "id": "urgency",
@@ -38,7 +38,11 @@
           "masa terhad",
           "tempat terhad"
         ]
-      }
+      },
+      "patterns": [
+        "within \\d+ (?:hours?|hrs?|minutes?|mins?|days?)",
+        "dalam (?:masa |tempoh )?\\d+ (?:jam|minit|hari)"
+      ]
     },
     {
       "id": "impersonation",
@@ -233,7 +237,10 @@
           "high return",
           "monthly return",
           "investment",
-          "double your money"
+          "double your money",
+          "investment mentor",
+          "weekly return",
+          "daily profit"
         ],
         "ms": [
           "kerja sambilan",
@@ -245,7 +252,9 @@
           "pulangan tinggi",
           "pulangan bulanan",
           "pelaburan",
-          "gandakan wang"
+          "gandakan wang",
+          "mentor pelaburan",
+          "keuntungan harian"
         ]
       }
     },
@@ -264,7 +273,11 @@
           "whatsapp us",
           "whatsapp me",
           "contact us at",
-          "reply with"
+          "reply with",
+          "telegram group",
+          "join our group",
+          "join our telegram",
+          "join our whatsapp"
         ],
         "ms": [
           "klik pautan",
@@ -275,7 +288,9 @@
           "hubungi kami",
           "whatsapp kami",
           "whatsapp saya",
-          "balas dengan"
+          "balas dengan",
+          "kumpulan telegram",
+          "sertai kumpulan"
         ]
       }
     }
