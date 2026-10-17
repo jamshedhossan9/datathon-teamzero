@@ -1,0 +1,20 @@
+# Jupyter autosave copies
+.ipynb_checkpoints/
+
+# Python compiled files
+__pycache__/
+*.pyc
+
+# Virtual environments
+.venv/
+venv/
+
+# Secrets
+.env
+
+# Trained model files: the model is trained on the LinuxONE VM, not committed
+*.joblib
+*.pkl
+
+# macOS
+.DS_Store
