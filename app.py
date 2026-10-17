@@ -4,16 +4,19 @@ Run from the repo folder:  python app.py   (listens on port 38889)
 """
 import csv
 import os
+import time
 from pathlib import Path
 
-from flask import Flask, abort, jsonify, render_template, request, send_from_directory
+from flask import Flask, abort, jsonify, request, send_from_directory
 
-from checker import granite
+from checker import granite, webapi
 from checker import model as word_model
 from checker.pipeline import MAX_MESSAGE_LENGTH, check_message
 
 BASE_DIR = Path(__file__).resolve().parent
 PAY_DIR = BASE_DIR / "static" / "pay"
+# The ZeroScam web UI, built from web/ with `npm run build`
+UI_DIR = BASE_DIR / "static" / "app"
 TEST_MESSAGES = BASE_DIR / "data" / "test_messages" / "test_messages.csv"
 
 # Messages for the inbox demo (step 412), in arrival order, with made-up senders.
@@ -32,7 +35,7 @@ DEMO_INBOX = [
     (20, "Kedai Contoh"),
 ]
 
-app = Flask(__name__, static_folder="static", template_folder="templates")
+app = Flask(__name__, static_folder="static")
 
 
 def _demo_link(message):
@@ -41,13 +44,12 @@ def _demo_link(message):
 
 
 @app.get("/")
-def home():
-    return render_template("index.html")
-
-
 @app.get("/inbox")
-def inbox():
-    return render_template("inbox.html")
+def web_ui():
+    # One web app for both pages: the checker one-pager at "/" and the live inbox demo at "/inbox"
+    if not (UI_DIR / "index.html").is_file():
+        return "The web UI is not built yet: run `npm run build` in web/.", 503
+    return send_from_directory(UI_DIR, "index.html")
 
 
 @app.get("/demo-messages")
@@ -67,12 +69,12 @@ def health():
     return jsonify({"status": "ok", "model_loaded": model_ready, "granite": granite.status()})
 
 
-def _message_from_request():
+def _message_from_request(field="message"):
     """Return (message, None) or (None, error response)."""
     data = request.get_json(silent=True) or {}
-    message = data.get("message")
+    message = data.get(field)
     if not isinstance(message, str) or not message.strip():
-        return None, (jsonify({"error": "Send JSON like {\"message\": \"text to check\"}"}), 400)
+        return None, (jsonify({"error": f"Send JSON like {{\"{field}\": \"text to check\"}}"}), 400)
     if len(message) > MAX_MESSAGE_LENGTH:
         return None, (jsonify({"error": f"Message too long (max {MAX_MESSAGE_LENGTH} characters)"}), 400)
     return message, None
@@ -93,6 +95,10 @@ def explain():
     message, error = _message_from_request()
     if error:
         return error
+    return _explain(message)
+
+
+def _explain(message):
     result = check_message(message, self_netloc=request.host)
     answer = granite.explain(message, result)
     if answer:
@@ -103,6 +109,33 @@ def explain():
         "text": "Sorry, the AI model couldn't write a clear explanation for this message. The checks above still apply.",
         "source": "fallback",
     })
+
+
+# --- API used by the ZeroScam web UI (web/) ---
+
+@app.post("/api/check")
+def api_check():
+    message, error = _message_from_request("text")
+    if error:
+        return error
+    started = time.perf_counter()
+    result = check_message(message, self_netloc=request.host)  # in memory only: never stored or logged
+    latency_ms = max(1, round((time.perf_counter() - started) * 1000))
+    return jsonify(webapi.to_web_result(message, result, latency_ms))
+
+
+@app.post("/api/explain")
+def api_explain():
+    message, error = _message_from_request("text")
+    if error:
+        return error
+    return _explain(message)
+
+
+@app.get("/api/stats")
+def api_stats():
+    # Measured results and the model's top scam words (no live counters, no messages)
+    return jsonify(webapi.stats())
 
 
 @app.get("/pay/<name>")

@@ -1,0 +1,15 @@
+{
+  "countries": [
+    { "iso3": "PAK", "country": "Pakistan", "value": 4.2, "metric": "Scam losses, % of GDP", "year": 2024, "source": "GASA & Feedzai — Global State of Scams 2024", "url": "https://gasa.org/knowledge-base/blog/global-state-of-scams-report-2024-1-trillion-stolen-in-12-months-gasa-feedzai" },
+    { "iso3": "KEN", "country": "Kenya", "value": 3.6, "metric": "Scam losses, % of GDP", "year": 2024, "source": "GASA & Feedzai — Global State of Scams 2024", "url": "https://gasa.org/knowledge-base/blog/global-state-of-scams-report-2024-1-trillion-stolen-in-12-months-gasa-feedzai" },
+    { "iso3": "ZAF", "country": "South Africa", "value": 3.4, "metric": "Scam losses, % of GDP", "year": 2024, "source": "GASA & Feedzai — Global State of Scams 2024", "url": "https://gasa.org/knowledge-base/blog/global-state-of-scams-report-2024-1-trillion-stolen-in-12-months-gasa-feedzai" },
+    { "iso3": "THA", "country": "Thailand", "value": 3.4, "metric": "Scam losses, % of GDP", "year": 2024, "source": "GASA — State of Scams in Thailand 2024", "url": "https://gasa.org/knowledge-base/blog/where-did-the-billions-go-in-malaysia-thailand-taiwan" },
+    { "iso3": "MYS", "country": "Malaysia", "value": 3.0, "metric": "Scam losses, % of GDP", "year": 2024, "source": "GASA — State of Scams in Malaysia 2024", "url": "https://gasa.org/knowledge-base/blog/where-did-the-billions-go-in-malaysia-thailand-taiwan" },
+    { "iso3": "TWN", "country": "Taiwan", "value": 1.0, "metric": "Scam losses, % of GDP", "year": 2024, "source": "GASA — State of Scams in Taiwan 2024", "url": "https://gasa.org/knowledge-base/blog/where-did-the-billions-go-in-malaysia-thailand-taiwan" },
+    { "iso3": "JPN", "country": "Japan", "value": 0.5, "metric": "Scam losses, % of GDP", "year": 2024, "source": "GASA — State of Scams in Japan 2024", "url": "https://www.gasa.org/post/2024-state-of-scams-in-japan-report" }
+  ],
+  "global": [
+    { "label": "Lost to scams worldwide in one year", "value": 1030000000000, "unit": "USD", "year": 2024, "source": "GASA & Feedzai — Global State of Scams 2024", "url": "https://gasa.org/knowledge-base/blog/global-state-of-scams-report-2024-1-trillion-stolen-in-12-months-gasa-feedzai" },
+    { "label": "Lost to scams across Asia in one year", "value": 688420000000, "unit": "USD", "year": 2024, "source": "GASA & ScamAdviser — Asia Scam Report 2024", "url": "https://gasa.org/knowledge-base/blog/2024-asia-scam-report-688-billion-lost" }
+  ]
+}

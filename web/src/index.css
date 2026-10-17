@@ -1,0 +1,217 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@theme inline {
+    --font-heading: 'DM Sans', system-ui, sans-serif;
+    --font-display: 'Bitcount Ink', 'DM Sans', system-ui, sans-serif;
+    --font-sans: 'DM Sans', system-ui, sans-serif;
+    --font-mono: 'DM Sans', system-ui, sans-serif;
+    --color-surface: var(--surface);
+    --color-muted-fg: var(--muted-fg);
+    --color-highlight: var(--highlight);
+    --color-scam: var(--scam);
+    --color-suspicious: var(--suspicious);
+    --color-legit: var(--legit);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+    /* Black theme from the 21st.dev SaaS template (black, white, gray-400/700/800) */
+    color-scheme: dark;
+    --background: #000000;
+    --surface: #0b0b0d;
+    --foreground: #ffffff;
+    --muted-fg: #9ca3af;
+    --highlight: #e5e7eb;
+    --scam: #f87171;
+    --suspicious: #fbbf24;
+    --legit: #4ade80;
+    --card: #0b0b0d;
+    --card-foreground: #ffffff;
+    --popover: #ffffff;
+    --popover-foreground: #000000;
+    --primary: #ffffff;
+    --primary-foreground: #000000;
+    --secondary: #1f2937;
+    --secondary-foreground: #ffffff;
+    --muted: #1f2937;
+    --muted-foreground: #9ca3af;
+    --accent: #1f2937;
+    --accent-foreground: #ffffff;
+    --destructive: #f87171;
+    --border: #1f2937;
+    --input: #374151;
+    --ring: #9ca3af;
+    --chart-1: #ffffff;
+    --chart-2: #d1d5db;
+    --chart-3: #9ca3af;
+    --chart-4: #6b7280;
+    --chart-5: #374151;
+    --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    }
+  body {
+    @apply bg-background text-foreground;
+    }
+  button:not(:disabled), [role="button"]:not(:disabled) {
+    cursor: pointer;
+    }
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Bitcount Ink (brand name only) is a colour font; paint it through a white text clip to match the theme. */
+.font-display {
+  background-image: linear-gradient(to bottom, #ffffff, #ffffff 55%, rgb(255 255 255 / 0.7));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── Shiny button (after @designali-in/shiny-button on 21st.dev) ─────────── */
+@property --shiny-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes shiny-spin {
+  to {
+    --shiny-angle: 360deg;
+  }
+}
+
+.shiny-button {
+  --shiny-blue: 59 130 246;
+  --shiny-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.5rem;
+  padding: 0 1rem;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  /* inner fill, then the rotating conic shine painted only on the 1px border */
+  background:
+    linear-gradient(180deg, #05051f, #000010) padding-box,
+    conic-gradient(
+        from var(--shiny-angle),
+        rgb(255 255 255 / 0.08) 0%,
+        rgb(255 255 255 / 0.08) 70%,
+        rgb(var(--shiny-blue)) 80%,
+        #bfdbfe 84%,
+        rgb(var(--shiny-blue)) 88%,
+        rgb(255 255 255 / 0.08) 95%
+      )
+      border-box;
+  animation: shiny-spin 3s linear infinite;
+  transition:
+    transform 200ms var(--shiny-ease),
+    box-shadow 600ms var(--shiny-ease);
+}
+
+.shiny-button svg {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+/* blue hover fill: its own layer so it can fade (gradients can't be transitioned) */
+.shiny-button__fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, #1d1d9e, #08085a);
+  box-shadow: inset 0 0 0 1px rgb(var(--shiny-blue) / 0.9);
+  opacity: 0;
+  transition: opacity 600ms var(--shiny-ease);
+  pointer-events: none;
+}
+
+/* dot pattern: one layer follows the shine, one fades in across the button on hover */
+.shiny-button__dots {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: radial-gradient(rgb(147 197 253 / 0.55) 0.6px, transparent 0.8px);
+  background-size: 4px 4px;
+  mask-image: conic-gradient(from var(--shiny-angle), transparent 0% 72%, #000 82%, transparent 92%);
+  -webkit-mask-image: conic-gradient(from var(--shiny-angle), transparent 0% 72%, #000 82%, transparent 92%);
+  transition: opacity 600ms var(--shiny-ease);
+  pointer-events: none;
+}
+
+.shiny-button__dots--fill {
+  mask-image: none;
+  -webkit-mask-image: none;
+  opacity: 0;
+}
+
+.shiny-button:hover,
+.shiny-button:focus-visible {
+  box-shadow: 0 0 24px -6px rgb(var(--shiny-blue) / 0.6);
+  outline: none;
+}
+
+.shiny-button:hover .shiny-button__fill,
+.shiny-button:focus-visible .shiny-button__fill {
+  opacity: 1;
+}
+
+.shiny-button:hover .shiny-button__dots--fill,
+.shiny-button:focus-visible .shiny-button__dots--fill {
+  opacity: 0.5;
+}
+
+.shiny-button:active {
+  transform: scale(0.97);
+}
