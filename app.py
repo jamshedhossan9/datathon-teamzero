@@ -80,24 +80,6 @@ def _message_from_request(field="message"):
     return message, None
 
 
-@app.post("/check")
-def check():
-    message, error = _message_from_request()
-    if error:
-        return error
-    # The message is checked in memory only: it is never stored or logged
-    return jsonify(check_message(message, self_netloc=request.host))
-
-
-@app.post("/explain")
-def explain():
-    # Granite's plain-language explanation (step 407), asked for after /check so the result shows instantly
-    message, error = _message_from_request()
-    if error:
-        return error
-    return _explain(message)
-
-
 def _explain(message):
     result = check_message(message, self_netloc=request.host)
     answer = granite.explain(message, result)

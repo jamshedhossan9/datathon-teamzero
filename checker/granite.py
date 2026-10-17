@@ -83,10 +83,6 @@ def load():
         return _model
 
 
-def load_in_background():
-    threading.Thread(target=load, daemon=True).start()
-
-
 def findings_text(result):
     """Short phrases describing what the layers found, for the prompt."""
     layers = result["layers"]

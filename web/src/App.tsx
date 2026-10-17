@@ -10,6 +10,10 @@ import { RevealIntro } from '@/components/site/RevealIntro'
 import KineticGrid from '@/components/ui/kinetic-grid'
 import { REPO_URL } from '@/lib/constants'
 
+// The grid background's wrapper uses overflow:hidden, which silently disables position:sticky inside it;
+// overflow-x:clip still stops sideways scrolling but keeps sticky working (the inbox phone)
+const PAGE_WRAPPER = 'text-foreground overflow-visible overflow-x-clip'
+
 // Two pages served by the same Flask app: the checker one-pager at "/" and the live inbox demo at "/inbox".
 const isInboxPage = () => typeof window !== 'undefined' && window.location.pathname.replace(/\/+$/, '') === '/inbox'
 
@@ -19,7 +23,7 @@ export default function App() {
 
   if (isInboxPage()) {
     return (
-      <KineticGrid globalColor="monochrome" className="text-foreground">
+      <KineticGrid globalColor="monochrome" className={PAGE_WRAPPER}>
         <FloatingBackground />
         <Nav />
         <main>
@@ -32,7 +36,7 @@ export default function App() {
   }
 
   return (
-    <KineticGrid globalColor="monochrome" className="text-foreground">
+    <KineticGrid globalColor="monochrome" className={PAGE_WRAPPER}>
       {!revealed && <RevealIntro onDone={onRevealDone} />}
       <FloatingBackground />
       <Nav />
