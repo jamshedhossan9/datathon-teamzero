@@ -28,7 +28,7 @@ function list(items) {
   return ul;
 }
 
-function renderResult(container, result, extraClass = "") {
+function renderResult(container, result, extraClass = "", explainMessage = null) {
   container.innerHTML = "";
   container.className = `card result ${result.verdict} ${extraClass}`.trim();
 
@@ -53,6 +53,29 @@ function renderResult(container, result, extraClass = "") {
 
   container.appendChild(el("h3", null, "Why"));
   container.appendChild(el("p", null, result.explanation.summary));
+
+  // Granite's plain-language explanation, fetched after the result is shown (landing page only)
+  if (explainMessage) {
+    const box = el("div", "ai-box");
+    box.appendChild(el("strong", null, "🤖 AI explanation (IBM Granite on LinuxONE)"));
+    const text = el("p", null, "Writing an explanation…");
+    box.appendChild(text);
+    container.appendChild(box);
+    fetch("/explain", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: explainMessage }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.source === "granite") {
+          text.textContent = data.text;
+        } else {
+          box.remove(); // Granite not available here: the rules-based "Why" above is already shown
+        }
+      })
+      .catch(() => box.remove());
+  }
 
   if (result.reasons.length) {
     container.appendChild(el("h3", null, "What we found"));

@@ -25,7 +25,7 @@ form.addEventListener("submit", async (event) => {
   button.disabled = true;
   button.textContent = "Checking…";
   try {
-    renderResult(output, await checkMessage(message));
+    renderResult(output, await checkMessage(message), "", message);
   } catch (error) {
     output.className = "card";
     output.textContent = `Sorry, the check failed: ${error.message}`;
