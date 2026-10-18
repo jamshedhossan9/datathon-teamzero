@@ -1,4 +1,6 @@
-# ZeroScam — Team Zero, IBM Z Datathon 2026
+# Project title: Team Zero_IBM Z Datathon 2026
+
+## ZeroScam: Real-time scam SMS checker
 
 ZeroScam is a real-time scam message checker. Paste an SMS or chat message, and ZeroScam, running on IBM
 LinuxONE, tells you whether it is **Safe**, **Suspicious** or a **Scam**, shows which words gave it away, tells
