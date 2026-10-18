@@ -31,6 +31,19 @@ awareness groups that protect them.
 - **Live inbox demo:** messages arrive on a phone screen one by one and are checked as they come in.
 - **Dashboard:** our measured results, the model's top scam words, and scam losses around the world.
 
+## Impact
+
+- **Stops the loss before it happens.** Most scam losses are final once the money is sent or the OTP is shared.
+  ZeroScam warns people at the moment they decide, and tells them who would really receive their money.
+- **Protects the people scammers target most.** Elderly people and students get a plain answer and clear next
+  steps, in English and Malay, without needing to know what a lookalike link or a mule account is.
+- **Points to real help in Malaysia.** Every warning links the user to PDRM Semak Mule and the National Scam
+  Response Centre (997), so a suspicious message turns into a check or a report instead of a payment.
+- **Ready to plug in.** Banks, telcos and messaging apps could call the same API to check messages before they
+  reach customers or before a payment goes through; awareness groups can use the web page as it is.
+- **Private by design.** Messages are never stored, and the AI runs on the same IBM LinuxONE machine, so people
+  can check a personal message without handing it to an outside service.
+
 ## Architecture
 
 ![ZeroScam architecture](docs/zeroscam-diagram.png)
