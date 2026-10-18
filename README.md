@@ -81,13 +81,28 @@ Measured on the held-out test set of the SMS Spam Collection (1,035 messages: 90
 
 ## Screenshots
 
-> 📸 **Screenshot placeholder:** checker page on the VM, Malay scam message → Scam, with highlighted words and the Granite explanation
+**Malay scam → Likely scam**, with the risky words highlighted, the reasons, advice and IBM Granite's explanation:
 
-> 📸 **Screenshot placeholder:** swapped-payee bill → Suspicious, "Payment goes to Ahmad Enterprise" while the message claims Syarikat Elektrik Contoh
+![Malay scam message checked by ZeroScam](docs/screenshot-1.png)
 
-> 📸 **Screenshot placeholder:** live inbox demo on the VM next to the Jupyter terminal showing each `POST /api/check`
+**Bill with a swapped payee → Suspicious.** The message claims to be from Syarikat Elektrik Contoh, but the
+receiver check reads the payment page and finds the money goes to Ahmad Enterprise:
 
-> 📸 **Screenshot placeholder:** dashboard, "The scam landscape"
+![Swapped-payee bill checked by ZeroScam](docs/screenshot-2.png)
+
+**Live inbox demo:** messages arrive one by one and each is checked as it comes in; click one for the details:
+
+![Live inbox demo](docs/screenshot-3.png)
+
+**Running on IBM LinuxONE:** the app at the VM's address (left) and the Jupyter terminal on the same VM (right),
+logging every `POST /api/check` and `POST /api/explain` request as it is answered:
+
+![ZeroScam and its server log on IBM LinuxONE](docs/screenshot-5.png)
+
+**Dashboard, "The scam landscape":** our measured results, scam losses worldwide, and the top scam words the
+model learned:
+
+![ZeroScam dashboard](docs/screenshot-4.png)
 
 ## How to run
 

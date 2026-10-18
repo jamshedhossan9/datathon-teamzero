@@ -32,6 +32,11 @@ Verdict: suspicious
 Findings: payment request; bank account to pay into
 Explanation: It asks you to pay into an account we cannot verify. Check with the company on a number you trust first.
 
+Message: Limited time only! Our special members get great rewards this week.
+Verdict: suspicious
+Findings: wording similar to known spam messages
+Explanation: Its wording is similar to known spam messages, but it has no links or payment requests. Be careful if the sender asks you for anything later.
+
 Message: Hi mum, I'll be home by 7.
 Verdict: safe
 Findings: none
@@ -98,7 +103,19 @@ def findings_text(result):
                 parts.append(f"the money goes to {r['receiver']}")
             else:
                 parts.append("the receiver of the payment could not be checked")
+    if not parts and result["verdict"] != "safe":
+        # Only the word model raised it: say so, or Granite invents links and payments to explain the verdict
+        return "wording similar to known spam messages"
     return "; ".join(parts) or "none"
+
+
+def grounding(result):
+    """What the message really contains, so answers that mention anything else can be dropped."""
+    layers = result["layers"]
+    has_link = bool(layers["links"]["links"] or layers["payments"]["payment_links"])
+    has_payment = bool(layers["payments"]["flags"] or layers["receivers"]
+                       or any(t["id"] == "payment_request" for t in layers["tactics"]))
+    return has_link, has_payment
 
 
 def build_prompt(message, result):
@@ -106,13 +123,30 @@ def build_prompt(message, result):
     return PROMPT.format(message=one_line, verdict=result["verdict"], findings=findings_text(result))
 
 
-def clean(text, verdict):
-    """Keep at most 2 distinct sentences; return None if the answer is unusable."""
+LINK_MENTION = re.compile(r"\b(?:links?|click|clicks|clicking|websites?|urls?)\b")
+PAYMENT_MENTION = re.compile(r"\b(?:pay|pays|paying|paid|payments?|transfers?)\b")
+# "It does not ask for money" / "it has no links" are statements of absence, so they may name what is missing.
+# "Do not click the link" is advice that assumes a link, so it does not count.
+ABSENCE = re.compile(r"\b(?:no|without|never|any)\b|\b(?:does|did|is|has)(?: not|n't)\b")
+
+
+def clean(text, verdict, has_link=True, has_payment=True):
+    """Keep at most 2 distinct sentences; return None if the answer is unusable.
+
+    has_link / has_payment: whether the message really has a link or a payment request. Sentences that
+    mention one that is not there (Granite inventing "Do not click the link") are dropped.
+    """
     sentences, seen = [], []
     for sentence in re.split(r"(?<=[.!?])\s+", text.strip()):
-        words = set(re.findall(r"[a-z]+", sentence.lower()))
+        lowered_sentence = sentence.lower()
+        words = set(re.findall(r"[a-z]+", lowered_sentence))
         if len(words) < 3:
             continue
+        if not ABSENCE.search(lowered_sentence):
+            if not has_link and LINK_MENTION.search(lowered_sentence):
+                continue
+            if not has_payment and PAYMENT_MENTION.search(lowered_sentence):
+                continue
         # Skip a sentence that mostly repeats an earlier one ("This is a scam. The message is a scam.")
         if any(len(words & w) / len(words | w) >= 0.5 for w in seen):
             continue
@@ -176,7 +210,7 @@ def explain(message, result, model=None):
                 stop=["\n", "Message:", "Verdict:"],
             )
         raw = out["choices"][0]["text"]
-        text = clean(raw, result["verdict"])
+        text = clean(raw, result["verdict"], *grounding(result))
         if DEBUG:
             print(f"granite debug: attempt {attempt}, {time.time() - started:.1f} s, raw answer: {raw!r}", file=sys.stderr, flush=True)
         if text:
